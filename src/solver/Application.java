@@ -13,7 +13,7 @@ public class Application {
     }
 
     public void run() {
-        var matrix = new Matrix();
+        var matrix = new MatrixOld();
         try {
             matrix.read(new File(inputFile));
         } catch (FileNotFoundException e) {
