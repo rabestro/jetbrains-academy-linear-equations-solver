@@ -1,27 +1,27 @@
 package solver;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.stream.DoubleStream;
 
-public class Application {
-    private final String inputFile;
-    private final String outputFile;
+public class Application implements Runnable {
+    private final Scanner scanner;
+    private final PrintWriter writer;
 
-    public Application(String inputFile, String outputFile) {
-        this.inputFile = inputFile;
-        this.outputFile = outputFile;
+    public Application(Scanner scanner, PrintWriter writer) {
+        this.scanner = scanner;
+        this.writer = writer;
     }
 
     public void run() {
-        var matrix = new MatrixOld();
-        try {
-            matrix.read(new File(inputFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-        matrix.print();
+        final int cols = scanner.nextInt() + 1;
+        final int rows = scanner.nextInt();
+        final var cells = DoubleStream.generate(scanner::nextDouble).limit(rows * cols).toArray();
+
+        final var matrix = new MatrixNew(rows, cols, cells);
+        System.out.println(matrix);
+
         matrix.solve();
-        matrix.write(new File(outputFile));
+        matrix.write(writer);
     }
 }
