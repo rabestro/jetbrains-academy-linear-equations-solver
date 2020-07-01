@@ -7,10 +7,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        new Application(
-                new Scanner(new File(args[1])),
-                new PrintWriter(new File(args[3]))
-        ).run();
+        try (
+                final var input = new Scanner(new File(args[1]));
+                final var output = new PrintWriter(new File(args[3]))
+        ) {
+            new Application(input, output).run();
+        }
     }
 }
 

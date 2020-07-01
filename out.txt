@@ -1,0 +1,4 @@
+NaN
+NaN
+NaN
+1.0
