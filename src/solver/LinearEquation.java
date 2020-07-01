@@ -1,7 +1,6 @@
 package solver;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.logging.*;
@@ -13,7 +12,7 @@ public final class LinearEquation {
 
     static {
         try {
-            final var fileHandler = new FileHandler("default.log");
+            final var fileHandler = new FileHandler("LinearEquation.log");
             logger.addHandler(fileHandler);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.setLevel(Level.ALL);
@@ -54,12 +53,6 @@ public final class LinearEquation {
             double k = cells[i * cols + row];
             range(row, cols).forEach(col -> cells[i * cols + col] -= k * cells[row * cols + col]);
         });
-//        for (int i = row + 1; i < cols - 1; i++) {
-//            final double k = cells[i * cols + row];
-//            for (int col = row; col < cols; col++) {
-//                cells[i * cols + col] -= k * cells[row * cols + col];
-//            }
-//        }
 //        System.out.println(this);
         logger.fine(this::toString);
     }
@@ -71,10 +64,6 @@ public final class LinearEquation {
         }
 //        System.out.println(this);
         logger.fine(this::toString);
-    }
-
-    public void write(PrintWriter writer) {
-        range(0, rows).forEach(i -> writer.println(cells[i * cols + cols - 1]));
     }
 
     public double[] getSolution() {

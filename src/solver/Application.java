@@ -1,6 +1,7 @@
 package solver;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.DoubleStream;
 
@@ -18,10 +19,8 @@ public class Application implements Runnable {
         final int rows = scanner.nextInt();
         final var cells = DoubleStream.generate(scanner::nextDouble).limit(rows * cols).toArray();
 
-        final var matrix = new LinearEquation(rows, cols, cells);
-        System.out.println(matrix);
-
-        matrix.solve();
-        matrix.write(writer);
+        final var equation = new LinearEquation(rows, cols, cells);
+        equation.solve();
+        Arrays.stream(equation.getSolution()).forEach(writer::println);
     }
 }
