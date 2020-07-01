@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.IntStream.range;
 
-public class LinearEquation {
+public final class LinearEquation {
     private final int rows;
     private final int cols;
     private final double[] cells;
@@ -14,6 +14,10 @@ public class LinearEquation {
         this.rows = rows;
         this.cols = cols;
         this.cells = cells;
+    }
+
+    private double get(final int row, final int col) {
+        return cells[row * cols + col];
     }
 
     public void solve() {
@@ -28,16 +32,16 @@ public class LinearEquation {
         range(row + 1, cols).forEach(i -> cells[row * cols + i] /= cells[diagonal]);
         cells[diagonal] = 1;
 
-//        range(row + 1, cols - 1).forEach(i -> {
-//            double k = cells[i * cols + row];
-//            range(row, cols).forEach(col -> cells[i * cols + col] -= k * cells[row * cols + col]);
-//        });
-        for (int i = row + 1; i < cols - 1; i++) {
-            final double k = cells[i * cols + row];
-            for (int col = row; col < cols; col++) {
-                cells[i * cols + col] -= k * cells[row * cols + col];
-            }
-        }
+        range(row + 1, cols - 1).forEach(i -> {
+            double k = cells[i * cols + row];
+            range(row, cols).forEach(col -> cells[i * cols + col] -= k * cells[row * cols + col]);
+        });
+//        for (int i = row + 1; i < cols - 1; i++) {
+//            final double k = cells[i * cols + row];
+//            for (int col = row; col < cols; col++) {
+//                cells[i * cols + col] -= k * cells[row * cols + col];
+//            }
+//        }
         System.out.println(this);
     }
 
