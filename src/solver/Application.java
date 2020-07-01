@@ -18,7 +18,7 @@ public class Application implements Runnable {
         final int rows = scanner.nextInt();
         final var cells = DoubleStream.generate(scanner::nextDouble).limit(rows * cols).toArray();
 
-        final var matrix = new MatrixNew(rows, cols, cells);
+        final var matrix = new LinearEquation(rows, cols, cells);
         System.out.println(matrix);
 
         matrix.solve();
