@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.logging.*;
+import java.util.stream.IntStream;
 
 import static java.util.stream.IntStream.range;
 
@@ -45,11 +46,11 @@ public final class LinearEquation {
         log.info(Arrays.toString(getSolution()));
     }
 
-    private boolean isNonZero(int row) {
-        if (cells[row * cols + row] == 0) {
-            return false;
+    private boolean isNonZero(int i) {
+        if (cells[i * cols + i] != 0) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void stage1(int row) {
