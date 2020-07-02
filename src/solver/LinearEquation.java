@@ -37,14 +37,22 @@ public final class LinearEquation {
     }
 
     public void solve() {
-        range(0, rows).forEach(this::stage1);
+        range(0, rows).takeWhile(this::isNonZero).forEach(this::stage1);
+
         for (int row = cols - 2; row > 0; --row) {
             stage2(row);
         }
         log.info(Arrays.toString(getSolution()));
     }
 
-    void stage1(int row) {
+    private boolean isNonZero(int row) {
+        if (cells[row * cols + row] == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    private void stage1(int row) {
         final var diagonal = row * cols + row;
         range(row + 1, cols).forEach(i -> cells[row * cols + i] /= cells[diagonal]);
         cells[diagonal] = 1;
@@ -53,16 +61,14 @@ public final class LinearEquation {
             double k = cells[i * cols + row];
             range(row, cols).forEach(col -> cells[i * cols + col] -= k * cells[row * cols + col]);
         });
-//        System.out.println(this);
         log.fine(this::toString);
     }
 
-    void stage2(int row) {
+    private void stage2(int row) {
         for (int i = row; i-- > 0; ) {
             cells[i * cols + cols - 1] -= cells[i * cols + row] * cells[row * cols + cols - 1];
             cells[i * cols + row] = 0;
         }
-//        System.out.println(this);
         log.fine(this::toString);
     }
 

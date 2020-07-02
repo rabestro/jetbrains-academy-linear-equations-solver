@@ -9,13 +9,13 @@ import java.util.logging.LogManager;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        try {
-            LogManager
-                    .getLogManager()
-                    .readConfiguration(Main.class.getResourceAsStream("logging.properties"));
-        } catch (IOException e) {
-            System.err.println("Could not setup logger configuration: " + e.toString());
-        }
+//        try {
+//            LogManager
+//                    .getLogManager()
+//                    .readConfiguration(Main.class.getResourceAsStream("/logging.properties"));
+//        } catch (IOException e) {
+//            System.err.println("Could not setup logger configuration: " + e.toString());
+//        }
 
         try (final var input = new Scanner(new File(args[1]));
              final var output = new PrintWriter(new File(args[3]))) {
