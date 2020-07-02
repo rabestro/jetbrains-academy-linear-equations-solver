@@ -54,6 +54,12 @@ public final class LinearEquation {
         for (int row = cols - 2; row > 0; --row) {
             stage2(row);
         }
+        boolean noSolution = range(cols - 1, rows).anyMatch(i -> cells[i * cols + cols - 1] != 0);
+        log.finest(noSolution ? "No solution" : "One solution");
+
+        if (noSolution) {
+            return NO_SOLUTIONS;
+        }
         log.info(Arrays.toString(getVariables()));
         return ONE_SOLUTION;
     }
@@ -68,9 +74,7 @@ public final class LinearEquation {
         final var findInCols = range(row * cols + row + 1, cells.length)
                 .filter(i -> i % cols > row && i % cols < cols - 1);
 
-        final var nonZeroCell = concat(findInRows, findInCols)
-                .filter(j -> cells[j * cols + row] != 0)
-                .findFirst();
+        final var nonZeroCell = concat(findInRows, findInCols).filter(i -> cells[i] != 0).findFirst();
 
         if (nonZeroCell.isPresent()) {
             swap(row * cols + row, nonZeroCell.getAsInt());
@@ -90,6 +94,11 @@ public final class LinearEquation {
 
     private void swapCols(int col1, int col2) {
         log.warning("Swapping cols...");
+        range(0, rows).forEach(row -> {
+            final var tmp = get(row, col1);
+            cells[row * cols + col1] = get(row, col2);
+            cells[row * cols + col2] = tmp;
+        });
 
     }
 
@@ -107,7 +116,7 @@ public final class LinearEquation {
         range(row + 1, cols).forEach(i -> cells[row * cols + i] /= cells[diagonal]);
         cells[diagonal] = 1;
 
-        range(row + 1, cols - 1).forEach(i -> {
+        range(row + 1, rows).forEach(i -> {
             final var k = cells[i * cols + row];
             range(row, cols).forEach(col -> cells[i * cols + col] -= k * cells[row * cols + col]);
         });
@@ -123,7 +132,7 @@ public final class LinearEquation {
     }
 
     public double[] getVariables() {
-        return range(0, rows).mapToDouble(i -> cells[i * cols + cols - 1]).toArray();
+        return range(0, cols - 1).mapToDouble(i -> cells[i * cols + cols - 1]).toArray();
     }
 
     @Override
