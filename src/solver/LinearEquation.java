@@ -8,14 +8,14 @@ import java.util.logging.*;
 import static java.util.stream.IntStream.range;
 
 public final class LinearEquation {
-    private static final Logger logger = Logger.getLogger(LinearEquation.class.getName());
+    private static final Logger log = Logger.getLogger(LinearEquation.class.getName());
 
     static {
         try {
-            final var fileHandler = new FileHandler("LinearEquation.log");
-            logger.addHandler(fileHandler);
+            final var fileHandler = new FileHandler("default%u.log");
+            log.addHandler(fileHandler);
             fileHandler.setFormatter(new SimpleFormatter());
-            logger.setLevel(Level.ALL);
+            log.setLevel(Level.ALL);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -29,7 +29,7 @@ public final class LinearEquation {
         this.rows = rows;
         this.cols = cols;
         this.cells = cells;
-        logger.config(this::toString);
+        log.config(this::toString);
     }
 
     private double get(final int row, final int col) {
@@ -41,7 +41,7 @@ public final class LinearEquation {
         for (int row = cols - 2; row > 0; --row) {
             stage2(row);
         }
-        logger.info(Arrays.toString(getSolution()));
+        log.info(Arrays.toString(getSolution()));
     }
 
     void stage1(int row) {
@@ -54,7 +54,7 @@ public final class LinearEquation {
             range(row, cols).forEach(col -> cells[i * cols + col] -= k * cells[row * cols + col]);
         });
 //        System.out.println(this);
-        logger.fine(this::toString);
+        log.fine(this::toString);
     }
 
     void stage2(int row) {
@@ -63,7 +63,7 @@ public final class LinearEquation {
             cells[i * cols + row] = 0;
         }
 //        System.out.println(this);
-        logger.fine(this::toString);
+        log.fine(this::toString);
     }
 
     public double[] getSolution() {
