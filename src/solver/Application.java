@@ -20,7 +20,16 @@ public class Application implements Runnable {
         final var cells = DoubleStream.generate(scanner::nextDouble).limit(rows * cols).toArray();
 
         final var equation = new LinearEquation(rows, cols, cells);
-        equation.solve();
-        Arrays.stream(equation.getSolution()).forEach(writer::println);
+        switch (equation.solve()) {
+            case 0:
+                writer.println("No solutions");
+                break;
+            case 1:
+                Arrays.stream(equation.getVariables()).forEach(writer::println);
+                break;
+            case 2:
+                writer.println("Infinitely many solutions");
+        }
+
     }
 }
