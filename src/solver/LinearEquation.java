@@ -41,10 +41,6 @@ public final class LinearEquation {
         return cells[row * cols + col];
     }
 
-//    private void set(final int row, final int col, final double value) {
-//        cells[row * cols + col] = value;
-//    }
-
     public int solve() {
         if (rows < cols - 1) {
             return MANY_SOLUTIONS;
@@ -65,10 +61,6 @@ public final class LinearEquation {
     }
 
     private boolean isNonZero(int row) {
-//        if (cells[row * cols + row] != 0) {
-//            return true;
-//        }
-
         final var findInRows = iterate(row * cols + row, i -> i < cells.length, i -> i + cols);
 
         final var findInCols = range(row * cols + row + 1, cells.length)
