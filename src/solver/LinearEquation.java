@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.logging.*;
 
-import static java.lang.Math.min;
 import static java.util.stream.IntStream.*;
 
 public final class LinearEquation {
@@ -45,7 +44,9 @@ public final class LinearEquation {
         if (rows < cols - 1) {
             return MANY_SOLUTIONS;
         }
-        range(0, min(rows, cols - 1)).takeWhile(this::isNonZero).forEach(this::stage1);
+        final var mainDiagonal = iterate(0, i -> i < cols * cols, i -> i + cols + 1);
+
+        mainDiagonal.takeWhile(this::findNonZero).forEach(this::stageOne);
 
         for (int row = cols - 2; row > 0; --row) {
             stage2(row);
@@ -56,20 +57,36 @@ public final class LinearEquation {
         if (noSolution) {
             return NO_SOLUTIONS;
         }
+//        if (cells[rows * cols + rows] == 0) {
+//            return MANY_SOLUTIONS;
+//        }
         log.info(Arrays.toString(getVariables()));
         return ONE_SOLUTION;
     }
 
-    private boolean isNonZero(int row) {
-        final var findInRows = iterate(row * cols + row, i -> i < cells.length, i -> i + cols);
+    private void stageOne(int index) {
+        range(index + 1, index / cols * cols + cols).forEach(i -> cells[i] /= cells[index]);
+        cells[index] = 1;
 
-        final var findInCols = range(row * cols + row + 1, cells.length)
-                .filter(i -> i % cols > row && i % cols < cols - 1);
+        iterate(index + cols, i -> i < cells.length, i -> i + cols)
+                .forEach(i -> range(i + 1, i / cols * cols + cols)
+                        .forEach(j -> cells[j] -= cells[i] * cells[index / cols * cols + j % cols]));
 
-        final var nonZeroCell = concat(findInRows, findInCols).filter(i -> cells[i] != 0).findFirst();
+        log.fine(this::toString);
+    }
+
+    private boolean findNonZero(int index) {
+        final var findInRows = iterate(index, i -> i < cells.length, i -> i + cols);
+
+        final var findInCols = range(index + 1, cells.length)
+                .filter(i -> i % cols > index / cols && i % cols < cols - 1);
+
+        final var nonZeroCell = concat(findInRows, findInCols)
+                .filter(i -> cells[i] != 0)
+                .findFirst();
 
         if (nonZeroCell.isPresent()) {
-            swap(row * cols + row, nonZeroCell.getAsInt());
+            swap(index, nonZeroCell.getAsInt());
             return true;
         }
         return false;
@@ -101,18 +118,6 @@ public final class LinearEquation {
             cells[row1 * cols + col] = get(row2, col);
             cells[row2 * cols + col] = tmp;
         });
-    }
-
-    private void stage1(int row) {
-        final var diagonal = row * cols + row;
-        range(row + 1, cols).forEach(i -> cells[row * cols + i] /= cells[diagonal]);
-        cells[diagonal] = 1;
-
-        range(row + 1, rows).forEach(i -> {
-            final var k = cells[i * cols + row];
-            range(row, cols).forEach(col -> cells[i * cols + col] -= k * cells[row * cols + col]);
-        });
-        log.fine(this::toString);
     }
 
     private void stage2(int row) {
