@@ -1,7 +1,6 @@
 package solver;
 
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.DoubleStream;
 
@@ -20,16 +19,6 @@ public class Application implements Runnable {
         final var cells = DoubleStream.generate(scanner::nextDouble).limit(rows * cols).toArray();
 
         final var equation = new LinearEquation(rows, cols, cells);
-        switch (equation.solve()) {
-            case 0:
-                writer.println("No solutions");
-                break;
-            case 1:
-                Arrays.stream(equation.getVariables()).forEach(writer::println);
-                break;
-            case 2:
-                writer.println("Infinitely many solutions");
-        }
-
+        writer.print(equation.getSolution());
     }
 }

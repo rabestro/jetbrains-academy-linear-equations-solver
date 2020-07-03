@@ -9,10 +9,6 @@ import static java.util.stream.IntStream.*;
 
 public final class LinearEquation {
     private static final Logger log = Logger.getLogger(LinearEquation.class.getName());
-    public static final int NO_SOLUTIONS = 0;
-    public static final int ONE_SOLUTION = 1;
-    public static final int MANY_SOLUTIONS = 2;
-
 
     static {
         try {
@@ -28,6 +24,7 @@ public final class LinearEquation {
     private final int rows;
     private final int cols;
     private final double[] cells;
+    private String solution;
 
     public LinearEquation(final int equations, final int cols, final double[] cells) {
         this.rows = equations;
@@ -40,39 +37,65 @@ public final class LinearEquation {
         return cells[row * cols + col];
     }
 
-    public int solve() {
-        if (rows < cols - 1) {
-            return MANY_SOLUTIONS;
-        }
-        final var mainDiagonal = iterate(0, i -> i < cols * cols, i -> i + cols + 1);
+    public String getSolution() {
+        final var mainDiagonal = iterate(0, i -> i < rows * cols, i -> i + cols + 1);
 
-        mainDiagonal.takeWhile(this::findNonZero).forEach(this::stageOne);
+        mainDiagonal
+                .takeWhile(this::findNonZero)
+                .forEach(this::stageOne);
+
+        if (isNoSolution()) {
+            return "No solutions";
+        }
+        if (isManySolutions()) {
+            return "Infinitely many solutions";
+        }
 
         for (int row = cols - 2; row > 0; --row) {
-            stage2(row);
-        }
-        boolean noSolution = range(cols - 1, rows).anyMatch(i -> cells[i * cols + cols - 1] != 0);
-        log.finest(noSolution ? "No solution" : "One solution");
-
-        if (noSolution) {
-            return NO_SOLUTIONS;
-        }
-        if (cells[(cols - 1) * cols - 2] == 0) {
-            return MANY_SOLUTIONS;
+            stageTwo(row);
         }
         log.info(Arrays.toString(getVariables()));
-        return ONE_SOLUTION;
+
+        return range(0, cols - 1)
+                .mapToObj(i -> cells[i * cols + cols - 1] + "\n")
+                .collect(Collectors.joining());
+    }
+
+    private boolean isNoSolution() {
+        final var nonZeroConstant = iterate(cells.length - 1, i -> i > 0, i -> i - cols)
+                .filter(i -> cells[i] != 0)
+                .findFirst();
+        return nonZeroConstant.isPresent()
+                && range(nonZeroConstant.getAsInt() - cols + 1, nonZeroConstant.getAsInt())
+                .allMatch(i -> cells[i] == 0);
+    }
+
+    private boolean isManySolutions() {
+        final var significantEquations = range(0, rows)
+                .filter(row -> range(0, cols - 1)
+                        .anyMatch(i -> cells[row * cols + i] != 0))
+                .count();
+        final var significantVariables = cols - 1;
+
+        log.fine("Significant Equations: " + significantEquations);
+        log.fine("Significant Variables: " + significantVariables);
+
+        return significantEquations < significantVariables;
     }
 
     private void stageOne(int index) {
+        log.finest("Stage One for index " + index);
+
         range(index + 1, index / cols * cols + cols).forEach(i -> cells[i] /= cells[index]);
         cells[index] = 1;
+        log.finest(this::toString);
 
-        iterate(index + cols, i -> i < cells.length, i -> i + cols)
-                .forEach(i -> range(i + 1, i / cols * cols + cols)
-                        .forEach(j -> cells[j] -= cells[i] * cells[index / cols * cols + j % cols]));
-
-        log.fine(this::toString);
+        iterate(index + cols, i -> i < cells.length, i -> i + cols).forEach(i -> {
+            range(i + 1, i / cols * cols + cols)
+                    .forEach(j -> cells[j] -= cells[i] * cells[index / cols * cols + j % cols]);
+            cells[i] = 0;
+        });
+        log.finest(this::toString);
     }
 
     private boolean findNonZero(int index) {
@@ -120,7 +143,7 @@ public final class LinearEquation {
         });
     }
 
-    private void stage2(int row) {
+    private void stageTwo(int row) {
         for (int i = row; i-- > 0; ) {
             cells[i * cols + cols - 1] -= cells[i * cols + row] * cells[row * cols + cols - 1];
             cells[i * cols + row] = 0;
