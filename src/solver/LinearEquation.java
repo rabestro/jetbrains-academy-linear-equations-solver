@@ -12,7 +12,7 @@ public final class LinearEquation {
 
     static {
         try {
-            final var fileHandler = new FileHandler("default%u.log");
+            final var fileHandler = new FileHandler("out/default%u.log");
             log.addHandler(fileHandler);
             fileHandler.setFormatter(new SimpleFormatter());
             log.setLevel(Level.ALL);
