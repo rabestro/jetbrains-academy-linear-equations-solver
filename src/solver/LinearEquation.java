@@ -57,9 +57,9 @@ public final class LinearEquation {
         if (noSolution) {
             return NO_SOLUTIONS;
         }
-//        if (cells[rows * cols + rows] == 0) {
-//            return MANY_SOLUTIONS;
-//        }
+        if (cells[(cols - 1) * cols - 2] == 0) {
+            return MANY_SOLUTIONS;
+        }
         log.info(Arrays.toString(getVariables()));
         return ONE_SOLUTION;
     }
