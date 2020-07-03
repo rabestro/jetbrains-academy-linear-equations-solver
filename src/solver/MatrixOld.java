@@ -10,7 +10,7 @@ import java.util.stream.DoubleStream;
 
 import static java.util.stream.IntStream.range;
 
-public class Matrix {
+public class MatrixOld {
     double[][] matrix;
     private int numberOfVariables;
     private int numberOfEquations;
