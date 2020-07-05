@@ -1,6 +1,5 @@
 package solver;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.logging.*;
@@ -9,17 +8,6 @@ import static java.util.stream.IntStream.*;
 
 public final class LinearEquation {
     private static final Logger log = Logger.getLogger(LinearEquation.class.getName());
-
-    static {
-        try {
-            final var fileHandler = new FileHandler("out/default%u.log");
-            log.addHandler(fileHandler);
-            fileHandler.setFormatter(new SimpleFormatter());
-            log.setLevel(Level.ALL);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private final int rows;
     private final int cols;
