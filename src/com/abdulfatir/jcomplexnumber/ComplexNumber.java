@@ -338,8 +338,8 @@ public class ComplexNumber {
      */
     public static ComplexNumber parseComplex(String s) {
         s = s.replaceAll(" ", "");
-        ComplexNumber parsed = null;
-        if (s.contains(String.valueOf("+")) || (s.contains(String.valueOf("-")) && s.lastIndexOf('-') > 0)) {
+        final ComplexNumber parsed;
+        if (s.contains("+") || (s.contains("-") && s.lastIndexOf('-') > 0)) {
             final String re;
             final String im;
             s = s.replaceAll("i", "");
@@ -352,6 +352,8 @@ public class ComplexNumber {
                 re = s.substring(0, s.lastIndexOf('-'));
                 im = s.substring(s.lastIndexOf('-') + 1);
                 parsed = new ComplexNumber(Double.parseDouble(re), -Double.parseDouble(im));
+            } else {
+                parsed = null;
             }
         } else {
             // Pure imaginary number
