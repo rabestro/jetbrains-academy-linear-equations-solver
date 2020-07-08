@@ -195,7 +195,9 @@ public class ComplexNumber {
     public String toString() {
         final String re = this.real + "";
         final String im;
-        if (this.imaginary < 0)
+        if (this.imaginary == 0) {
+            im = "";
+        } else if (this.imaginary < 0)
             im = this.imaginary + "i";
         else
             im = "+" + this.imaginary + "i";

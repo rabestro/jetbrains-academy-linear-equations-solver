@@ -55,6 +55,12 @@ public final class LinearEquation {
                 .collect(Collectors.joining());
     }
 
+    public ComplexNumber[] getVariables() {
+        return range(0, cols - 1)
+                .mapToObj(i -> cells[i * cols + cols - 1])
+                .toArray(ComplexNumber[]::new);
+    }
+
     private boolean isNoSolution() {
         final var nonZeroConstant = iterate(cells.length - 1, i -> i > 0, i -> i - cols)
                 .filter(i -> !cells[i].equals(ZERO))
@@ -142,12 +148,6 @@ public final class LinearEquation {
             cells[row1 * cols + col] = get(row2, col);
             cells[row2 * cols + col] = tmp;
         });
-    }
-
-    public ComplexNumber[] getVariables() {
-        return range(0, cols - 1)
-                .mapToObj(i -> cells[i * cols + cols - 1])
-                .toArray(ComplexNumber[]::new);
     }
 
     @Override
