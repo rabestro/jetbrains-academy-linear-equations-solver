@@ -1,8 +1,9 @@
 package solver;
 
+import com.abdulfatir.jcomplexnumber.ComplexNumber;
+
 import java.io.PrintWriter;
 import java.util.Scanner;
-import java.util.stream.DoubleStream;
 
 public class Application implements Runnable {
     private final Scanner scanner;
@@ -16,7 +17,10 @@ public class Application implements Runnable {
     public void run() {
         final int cols = scanner.nextInt() + 1;
         final int rows = scanner.nextInt();
-        final var cells = DoubleStream.generate(scanner::nextDouble).limit(rows * cols).toArray();
+        final var cells = scanner.tokens()
+                .limit(rows * cols)
+                .map(ComplexNumber::parseComplex)
+                .toArray(ComplexNumber[]::new);
 
         final var equation = new LinearEquation(rows, cols, cells);
         writer.print(equation.getSolution());
