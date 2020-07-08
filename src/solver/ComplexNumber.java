@@ -75,4 +75,12 @@ public final class ComplexNumber {
         return real + im;
     }
 
+    @Override
+    public final boolean equals(Object z) {
+        if (!(z instanceof ComplexNumber))
+            return false;
+        ComplexNumber a = (ComplexNumber) z;
+        return (real == a.real) && (imaginary == a.imaginary);
+    }
+
 }
