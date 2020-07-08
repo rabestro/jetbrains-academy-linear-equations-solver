@@ -12,6 +12,7 @@ public final class ComplexNumber {
     public static final ComplexNumber ONE = new ComplexNumber(1, 0);
     private static final Pattern ONLY_REAL = Pattern.compile("[-+]?\\d+(\\.\\d*)?");
     private static final Pattern ONLY_IMAGINARY = Pattern.compile("[-+]?\\d*(\\.\\d*)?i");
+    private static final Pattern ONLY_I = Pattern.compile("[-+]?i");
     private static final Pattern RE_IM = Pattern.compile("(?<=\\d)(?=[-+])");
     private static final Logger log = Logger.getLogger(LinearEquation.class.getName());
 
@@ -24,18 +25,18 @@ public final class ComplexNumber {
     }
 
     public ComplexNumber(final String complexNumber) {
-        log.info(complexNumber);
+        log.fine(complexNumber);
         if (ONLY_IMAGINARY.matcher(complexNumber).matches()) {
             real = 0;
             imaginary = parseDouble(complexNumber
-                    .replace('i', complexNumber.matches("[-+]?i") ? '1' : ' '));
+                    .replace('i', ONLY_I.matcher(complexNumber).matches() ? '1' : ' '));
         } else if (ONLY_REAL.matcher(complexNumber).matches()) {
             real = parseDouble(complexNumber);
             imaginary = 0;
         } else {
             real = parseDouble(RE_IM.split(complexNumber)[0]);
-            final var second = RE_IM.split(complexNumber)[1];
-            imaginary = parseDouble((second.replace('i', second.matches("[-+]?i") ? '1' : ' ')));
+            final var secondPart = RE_IM.split(complexNumber)[1];
+            imaginary = parseDouble(secondPart.replace('i', ONLY_I.matcher(secondPart).matches() ? '1' : ' '));
         }
     }
 

@@ -98,7 +98,6 @@ public final class LinearEquation {
 
     private boolean findNonZero(int index) {
         final var findInRows = iterate(index, i -> i < cells.length, i -> i + cols);
-
         final var findInCols = range(index + 1, cells.length)
                 .filter(i -> i % cols > index / cols && i % cols < cols - 1);
 
@@ -132,7 +131,7 @@ public final class LinearEquation {
     }
 
     private void swapCols(int col1, int col2) {
-        log.info("Swapping cols...");
+        log.fine("Swapping cols...");
         range(0, rows).forEach(row -> {
             final var tmp = get(row, col1);
             cells[row * cols + col1] = get(row, col2);
@@ -141,7 +140,7 @@ public final class LinearEquation {
     }
 
     private void swapRows(int row1, int row2) {
-        log.info("Swapping rows...");
+        log.fine("Swapping rows...");
         range(0, cols).forEach(col -> {
             final var tmp = get(row1, col);
             cells[row1 * cols + col] = get(row2, col);
