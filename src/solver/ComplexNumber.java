@@ -1,5 +1,6 @@
 package solver;
 
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static java.lang.Double.parseDouble;
@@ -12,6 +13,7 @@ public final class ComplexNumber {
     private static final Pattern ONLY_REAL = Pattern.compile("[-+]?\\d+(\\.\\d*)?");
     private static final Pattern ONLY_IMAGINARY = Pattern.compile("[-+]?\\d*(\\.\\d*)?i");
     private static final Pattern RE_IM = Pattern.compile("(?<=\\d)(?=[-+])");
+    private static final Logger log = Logger.getLogger(LinearEquation.class.getName());
 
     private double real;
     private double imaginary;
@@ -22,6 +24,7 @@ public final class ComplexNumber {
     }
 
     public ComplexNumber(final String complexNumber) {
+        log.info(complexNumber);
         if (ONLY_IMAGINARY.matcher(complexNumber).matches()) {
             real = 0;
             imaginary = parseDouble(complexNumber
@@ -31,7 +34,8 @@ public final class ComplexNumber {
             imaginary = 0;
         } else {
             real = parseDouble(RE_IM.split(complexNumber)[0]);
-            imaginary = parseDouble((RE_IM.split(complexNumber)[1].replace('i', ' ')));
+            final var second = RE_IM.split(complexNumber)[1];
+            imaginary = parseDouble((second.replace('i', second.matches("[-+]?i") ? '1' : ' ')));
         }
     }
 
