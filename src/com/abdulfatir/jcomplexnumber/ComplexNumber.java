@@ -193,15 +193,14 @@ public class ComplexNumber {
      */
     @Override
     public String toString() {
-        final String re = this.real + "";
         final String im;
-        if (this.imaginary == 0) {
+        if (imaginary == 0) {
             im = "";
-        } else if (this.imaginary < 0)
-            im = this.imaginary + "i";
+        } else if (imaginary < 0)
+            im = imaginary + "i";
         else
-            im = "+" + this.imaginary + "i";
-        return re + im;
+            im = "+" + imaginary + "i";
+        return real + im;
     }
 
     /**
