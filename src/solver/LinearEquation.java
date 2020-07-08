@@ -38,6 +38,9 @@ public final class LinearEquation {
             return "Infinitely many solutions";
         }
 
+//        iterate(cols - 2, i -> i > 0, i -> i - 1)
+//                .forEach(this::stageTwo);
+
         for (int row = cols - 2; row > 0; --row) {
             stageTwo(row);
         }
@@ -102,6 +105,14 @@ public final class LinearEquation {
         return false;
     }
 
+    private void stageTwo(int row) {
+        for (int i = row; i-- > 0; ) {
+            cells[i * cols + cols - 1] -= cells[i * cols + row] * cells[row * cols + cols - 1];
+            cells[i * cols + row] = 0;
+        }
+        log.fine(this::toString);
+    }
+
     private void swap(int i, int nonZeroCell) {
         if (i / cols != nonZeroCell / cols) {
             swapRows(i / cols, nonZeroCell / cols);
@@ -128,14 +139,6 @@ public final class LinearEquation {
             cells[row1 * cols + col] = get(row2, col);
             cells[row2 * cols + col] = tmp;
         });
-    }
-
-    private void stageTwo(int row) {
-        for (int i = row; i-- > 0; ) {
-            cells[i * cols + cols - 1] -= cells[i * cols + row] * cells[row * cols + cols - 1];
-            cells[i * cols + row] = 0;
-        }
-        log.fine(this::toString);
     }
 
     public double[] getVariables() {
