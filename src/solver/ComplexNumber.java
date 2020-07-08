@@ -62,4 +62,17 @@ public final class ComplexNumber {
     public ComplexNumber conjugate() {
         return new ComplexNumber(real, -imaginary);
     }
+
+    @Override
+    public String toString() {
+        final String im;
+        if (imaginary == 0) {
+            im = "";
+        } else if (imaginary < 0)
+            im = imaginary + "i";
+        else
+            im = "+" + imaginary + "i";
+        return real + im;
+    }
+
 }
