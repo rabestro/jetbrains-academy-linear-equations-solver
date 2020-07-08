@@ -1,14 +1,11 @@
 package solver;
 
-import com.abdulfatir.jcomplexnumber.ComplexNumber;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.logging.*;
 
-import static com.abdulfatir.jcomplexnumber.ComplexNumber.ZERO;
-import static com.abdulfatir.jcomplexnumber.ComplexNumber.multiply;
 import static java.util.stream.IntStream.*;
+import static solver.ComplexNumber.ZERO;
 
 public final class LinearEquation {
     private static final Logger log = Logger.getLogger(LinearEquation.class.getName());
@@ -86,13 +83,14 @@ public final class LinearEquation {
         log.finest("Stage One for index " + index);
 
         range(index + 1, index / cols * cols + cols)
-                .forEach(i -> cells[i].divide(cells[index]));
+                .forEach(i -> cells[i] = cells[i].divide(cells[index]));
         cells[index] = ComplexNumber.ONE;
         log.finest(this::toString);
 
         iterate(index + cols, i -> i < cells.length, i -> i + cols).forEach(i -> {
             range(i + 1, i / cols * cols + cols)
-                    .forEach(j -> cells[j].subtract(multiply(cells[i], cells[index / cols * cols + j % cols])));
+                    .forEach(j -> cells[j] = cells[j]
+                            .subtract(cells[i].multiply(cells[index / cols * cols + j % cols])));
             cells[i] = ZERO;
         });
         log.finest(this::toString);
@@ -117,7 +115,8 @@ public final class LinearEquation {
 
     private void stageTwo(int row) {
         for (int i = row; i-- > 0; ) {
-            cells[i * cols + cols - 1].subtract(multiply(cells[i * cols + row], cells[row * cols + cols - 1]));
+            cells[i * cols + cols - 1] = cells[i * cols + cols - 1]
+                    .subtract(cells[i * cols + row].multiply(cells[row * cols + cols - 1]));
             cells[i * cols + row] = ZERO;
         }
         log.fine(this::toString);

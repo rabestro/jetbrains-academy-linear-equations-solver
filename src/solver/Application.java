@@ -1,7 +1,5 @@
 package solver;
 
-import com.abdulfatir.jcomplexnumber.ComplexNumber;
-
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -19,7 +17,7 @@ public class Application implements Runnable {
         final int rows = scanner.nextInt();
         final var cells = scanner.tokens()
                 .limit(rows * cols)
-                .map(ComplexNumber::parseComplex)
+                .map(ComplexNumber::new)
                 .toArray(ComplexNumber[]::new);
 
         final var equation = new LinearEquation(rows, cols, cells);
