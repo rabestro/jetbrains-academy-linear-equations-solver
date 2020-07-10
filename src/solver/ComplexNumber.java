@@ -16,8 +16,8 @@ public final class ComplexNumber {
     private static final Pattern RE_IM = Pattern.compile("(?<=\\d)(?=[-+])");
     private static final Logger log = Logger.getLogger(LinearEquation.class.getName());
 
-    private double real;
-    private double imaginary;
+    private final double real;
+    private final double imaginary;
 
     public ComplexNumber(final double real, final double imaginary) {
         this.real = real;
