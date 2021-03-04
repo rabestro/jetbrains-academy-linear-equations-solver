@@ -16,7 +16,7 @@ public class Main {
         }
 
         try (final var input = new Scanner(new File(args[1]));
-             final var output = new PrintWriter(new File(args[3]))) {
+             final var output = new PrintWriter(args[3])) {
             new Application(input, output).run();
         } catch (FileNotFoundException e) {
             log.log(Level.SEVERE, "File not found", e);
